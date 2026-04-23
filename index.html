@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>CineTrack 🎬</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="hglow"></div>
+    <div class="logo">Cine<em>Track</em> <sup>TR</sup></div>
+    <p class="tagline">Kişisel film &amp; dizi takip uygulaması — TMDb destekli</p>
+  </header>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div class="stat">
+      <span class="num" id="s-total">0</span>
+      <span class="lbl">Toplam</span>
+    </div>
+    <div class="sdiv"></div>
+    <div class="stat s-watched">
+      <span class="num" id="s-watched">0</span>
+      <span class="lbl">İzlendi</span>
+    </div>
+    <div class="sdiv"></div>
+    <div class="stat">
+      <span class="num" id="s-unwatched">0</span>
+      <span class="lbl">İzlenecek</span>
+    </div>
+    <div class="sdiv"></div>
+    <div class="stat s-score">
+      <span class="num" id="s-avgscore">—</span>
+      <span class="lbl">Ort. Puan</span>
+    </div>
+  </div>
+
+  <div class="wrap">
+
+    <!-- SEARCH PANEL -->
+    <section class="search-panel">
+      <div class="panel-header">
+        <span class="panel-title">🔍 Film / Dizi Ara &amp; Ekle</span>
+      </div>
+
+      <div class="search-row">
+        <input type="text" id="search-input"
+          placeholder="Film veya dizi adı yazın... (Türkçe arama destekli)"
+          autocomplete="off">
+        <button class="btn-search" id="btn-do-search">Ara</button>
+        <div id="autocomplete-list" class="ac-list hidden"></div>
+      </div>
+
+      <!-- Selected Film Preview -->
+      <div id="selected-preview" class="hidden">
+        <img class="sel-poster" id="sel-poster" src="" alt="">
+        <div class="sel-info">
+          <div class="sel-title" id="sel-title"></div>
+          <div class="sel-year"  id="sel-year"></div>
+          <div class="sel-overview" id="sel-overview"></div>
+          <div class="sel-tags" id="sel-tags"></div>
+
+          <div class="my-rating">
+            <label>Puanın:</label>
+            <div class="stars" id="add-stars">
+              <span class="star" data-v="1">★</span><span class="star" data-v="2">★</span>
+              <span class="star" data-v="3">★</span><span class="star" data-v="4">★</span>
+              <span class="star" data-v="5">★</span><span class="star" data-v="6">★</span>
+              <span class="star" data-v="7">★</span><span class="star" data-v="8">★</span>
+              <span class="star" data-v="9">★</span><span class="star" data-v="10">★</span>
+            </div>
+            <span class="star-val" id="add-star-val">—</span>
+          </div>
+
+          <div class="sel-actions">
+            <button class="btn-add-watched" id="btn-add-watched">✓ İzledim — Ekle</button>
+            <button class="btn-add-watchlist" id="btn-add-watchlist">+ İzleyeceğim</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recommendations -->
+      <div id="recs-section" class="hidden">
+        <div class="recs-title">🤖 Bunları da beğenebilirsin</div>
+        <div class="recs-grid" id="recs-grid"></div>
+      </div>
+
+      <!-- Seasons & Episodes -->
+      <div id="seasons-section" class="hidden">
+        <div class="seasons-title">📺 Sezonlar &amp; Bölümler</div>
+        <div class="season-tabs" id="season-tabs"></div>
+        <div class="episodes-list" id="episodes-list"></div>
+      </div>
+    </section>
+
+    <!-- FILTER BAR -->
+    <div class="filter-bar">
+      <div class="filter-tabs">
+        <button class="tab active" data-filter="all">Tümü</button>
+        <button class="tab" data-filter="unwatched">İzlenecek</button>
+        <button class="tab" data-filter="watched">İzlendi</button>
+      </div>
+      <div class="sort-wrap">
+        <label>Sırala:</label>
+        <select id="sort-select">
+          <option value="added">Eklenme</option>
+          <option value="title">A → Z</option>
+          <option value="rating">Puanım</option>
+          <option value="imdb">TMDb Puanı</option>
+          <option value="year">Yıl</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- FILM LIST -->
+    <ul id="film-list"></ul>
+
+    <div id="empty-state" class="empty-state hidden">
+      <div class="ei">🎞️</div>
+      <p>Listeniz henüz boş.</p>
+      <small>Yukarıdan bir film veya dizi arayıp ekleyin.</small>
+    </div>
+
+  </div><!-- /wrap -->
+
+  <!-- DETAIL MODAL -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal" id="modal">
+      <button class="modal-close" id="modal-close">✕</button>
+
+      <div class="modal-hero">
+        <img class="modal-backdrop" id="modal-backdrop" src="" alt="">
+        <div class="modal-hero-info">
+          <img class="modal-poster" id="modal-poster" src="" alt="">
+          <div>
+            <div class="modal-main-title" id="modal-title"></div>
+            <div class="modal-sub" id="modal-sub"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-body">
+
+        <div class="modal-section">
+          <div class="modal-section-title">Genel Bilgi</div>
+          <p class="modal-overview" id="modal-overview"></p>
+          <div class="modal-tags" id="modal-tags"></div>
+        </div>
+
+        <div class="modal-section">
+          <div class="modal-section-title">İzleme Durumu</div>
+          <button class="btn-modal-toggle" id="btn-modal-toggle">
+            <span class="toggle-icon">○</span>
+            <span id="modal-toggle-lbl">İzlenecek — Tıkla izledim</span>
+          </button>
+        </div>
+
+        <div class="modal-section">
+          <div class="modal-section-title">Puanım</div>
+          <div class="modal-stars-wrap">
+            <div class="modal-stars" id="modal-stars">
+              <span class="modal-star" data-v="1">★</span><span class="modal-star" data-v="2">★</span>
+              <span class="modal-star" data-v="3">★</span><span class="modal-star" data-v="4">★</span>
+              <span class="modal-star" data-v="5">★</span><span class="modal-star" data-v="6">★</span>
+              <span class="modal-star" data-v="7">★</span><span class="modal-star" data-v="8">★</span>
+              <span class="modal-star" data-v="9">★</span><span class="modal-star" data-v="10">★</span>
+            </div>
+            <span class="modal-rating-val" id="modal-rating-val">—</span>
+            <span class="modal-rating-lbl">/10</span>
+          </div>
+        </div>
+
+        <div class="modal-section">
+          <div class="modal-section-title">Notum</div>
+          <textarea class="note-area" id="modal-note" placeholder="Bu film / dizi hakkında notlarınız..."></textarea>
+          <button class="btn-save-note" id="btn-save-note">Kaydet</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast-container"></div>
+
+  <footer>
+    <p>CineTrack &mdash; TMDb API destekli kişisel takip uygulaması</p>
+  </footer>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
