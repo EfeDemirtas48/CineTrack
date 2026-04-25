@@ -44,3 +44,4 @@ CineTrack/
 - Veriler tarayıcının `localStorage` alanına kaydedilir.
 - İnternet bağlantısı gereklidir (TMDb API için).
 - API key zaten dahildir, ek kurulum gerekmez.
+- https://efedemirtas48.github.io/CineTrack/
